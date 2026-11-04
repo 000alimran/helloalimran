@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactBlock from '../../components/ContactBlock.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const essays = await getCollection('writing');
+  return essays.map((essay) => ({ params: { slug: essay.id }, props: { essay } }));
+}
+
+const { essay } = Astro.props;
+const { data } = essay;
+const { Content } = await render(essay);
+---
+<Base title={data.title} description={data.description} ogType="article" progress>
+<div class="wrap breadcrumbs"><a href="/writing/">← All writing</a></div><section class="article-head wrap"><p class="eyebrow">{data.eyebrow}</p><h1>{data.heading}</h1><p class="subhead">{data.subhead}</p><div class="article-meta">{data.meta.map((m) => <span>{m}</span>)}</div></section>
+<section class="wrap"><article class="article-body"><Content />{data.note && <p class="article-note">{data.note}</p>}</article></section>
+<ContactBlock />
+</Base>

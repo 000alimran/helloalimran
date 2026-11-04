@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactBlock from '../../components/ContactBlock.astro';
+import { getCollection } from 'astro:content';
+
+const studies = (await getCollection('research')).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Research" description="Research interests, proposed studies and future publications in human-computer interaction and digital accessibility.">
+<section class="page-hero tone-dark"><div class="wrap"><p class="eyebrow">RESEARCH / INDEPENDENT INQUIRY</p><h1>Questions worth<br>investigating.</h1><p class="subhead">I am developing an independent research practice. Research ideas are identified as such; they are not presented as published or peer-reviewed work.</p></div></section>
+<section class="section"><div class="wrap two-panel"><div class="long-copy"><h2>Focus areas</h2><p>I am interested in the intersection of human-computer interaction, digital service accessibility, user experience and responsible AI adoption, particularly in emerging-market contexts.</p><div class="tagline"><span>Human-computer interaction</span><span>Accessibility</span><span>Healthcare UX</span><span>AI adoption</span><span>Digital services</span></div><h2>Research in progress</h2>{studies.map((r) => <div class="paper"><span class="paper-label">{r.data.indexLabel}</span><h3>{r.data.title}</h3><p>{r.data.indexSummary}</p><a class="underline-link" href={`/research/${r.id}/`}>Read the proposal ↗</a></div>)}<h2>Publications</h2><div class="empty"><strong>No peer-reviewed publications listed yet.</strong><p>This section will be updated when manuscripts, preprints or journal articles are available. A research interest or unpublished proposal is not a publication.</p></div><h2>Academic collaboration</h2><p>I welcome constructive methodological feedback and conversations with researchers working on accessible digital services, HCI, and technology adoption.</p><a class="text-link" href="/contact/">Get in touch ↗</a></div><aside class="fact-panel"><p class="tiny-label">RESEARCH PROFILE</p><dl><div class="fact-item"><dt>Status</dt><dd>Independent researcher in development</dd></div><div class="fact-item"><dt>Academic background</dt><dd>Graphic design and postgraduate information technology studies</dd></div><div class="fact-item"><dt>Publications</dt><dd>None currently asserted</dd></div><div class="fact-item"><dt>Academic identities</dt><dd>ORCID and Google Scholar links will appear when verified profiles are ready.</dd></div></dl></aside></div></section>
+<ContactBlock />
+</Base>

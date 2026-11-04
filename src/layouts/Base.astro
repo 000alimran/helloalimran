@@ -1,0 +1,70 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  ogType?: 'website' | 'article';
+  jsonLd?: Record<string, unknown>;
+  progress?: boolean;
+  flip?: boolean;
+  paper?: boolean;
+}
+
+const { title, description, ogType = 'website', jsonLd, progress = false, flip = false, paper = false } = Astro.props;
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const fullTitle = `${title} | Al Imran`;
+const site = Astro.site!.href;
+const ld = jsonLd ?? {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  url,
+  description,
+  isPartOf: { '@type': 'WebSite', name: 'Al Imran', url: site },
+};
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f3ede2">
+<meta name="description" content={description}>
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content={ogType}>
+<meta property="og:title" content={fullTitle}>
+<meta property="og:description" content={description}>
+<meta property="og:site_name" content="Al Imran">
+<meta property="og:url" content={url}>
+<meta property="og:image" content={`${site}social-card.png`}>
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Al Imran: Thinking deeply. Building meaningfully.">
+<meta name="twitter:image" content={`${site}social-card.png`}>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content={fullTitle}>
+<meta name="twitter:description" content={description}>
+<link rel="canonical" href={url}>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/styles.css">
+<script is:inline src="/js/anim-init.js"></script>
+<style is:inline>[hidden]{display:none!important}</style>
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />
+<title>{fullTitle}</title>
+</head>
+<body>
+{progress && <div class="progress-track" aria-hidden="true"><div class="progress"></div></div>}
+<Header />
+<main id="main"><slot /></main>
+<Footer />
+<script is:inline defer src="/js/gsap.min.js"></script>
+<script is:inline defer src="/js/ScrollTrigger.min.js"></script>
+{flip && <script is:inline defer src="/js/Flip.min.js"></script>}
+<script is:inline defer src="/site.js"></script>
+<script is:inline defer src="/js/animations.js"></script>
+{paper && <script is:inline defer src="/js/paper-cards.js"></script>}
+</body>
+</html>

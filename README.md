@@ -1,27 +1,45 @@
 # helloalimran.com
 
-Al Imran's monochrome editorial personal website. Static HTML/CSS/JS on Cloudflare Workers Static Assets.
+Al Imran's editorial personal website. Built with [Astro](https://astro.build) as a fully static site and served by Cloudflare Workers Static Assets. Content lives in Markdown files and can be edited in the browser with [Keystatic](https://keystatic.com).
+
+## Editing content
+
+Requires Node.js 22.23.4 or newer (`.nvmrc`).
+
+```bash
+npm install
+npm run dev
+```
+
+- Site: http://localhost:4321/
+- Admin panel: http://localhost:4321/keystatic/
+
+Keystatic saves straight into `src/content/`. Commit and push to `main` and Cloudflare rebuilds the live site.
+
+| What | Where | Shown on |
+| --- | --- | --- |
+| Projects | `src/content/projects/*.md` | Home and Work cards. `group: venture` also gets `/work/<slug>/`; `group: orbit` links out to its website |
+| Writing | `src/content/writing/*.md` | Home (latest three), `/writing/`, `/writing/<slug>/` |
+| Research | `src/content/research/*.md` | Home (first one), `/research/`, `/research/<slug>/` |
+
+`order` sets the position on the Work page, `homeOrder` the position on the home page (leave it empty to keep a project off the home page). An orbit project without a `website` shows "website coming soon".
 
 ## Structure
 
-- `public/index.html`: homepage
-- `public/about/`: biography and interactive timeline
-- `public/work/`: selected ventures and clearly attributed initiatives
-- `public/research/`: research interests and explicitly unpublished study proposal
-- `public/writing/`: editorial essays
-- `public/now/`: current interests
-- `public/contact/`: verified professional contact
-- `public/styles.css`: black-and-white responsive design system
-- `public/site.js`: mobile menu, filters, reading progress
+- `src/pages/`: one file per page; `[slug].astro` files render the content collections
+- `src/layouts/Base.astro`: shared `<head>`, header, footer and scripts
+- `src/components/`: header, footer, contact block, project card
+- `src/content.config.ts`: content schema; `keystatic.config.ts`: admin panel fields
+- `public/`: copied as-is: `styles.css`, `site.js`, `js/` (GSAP, animations, paper cards), images, `_headers`, `robots.txt`
+- `/sitemap.xml` is generated from the pages and collections
 
 ## Deploy (Cloudflare Workers)
 
 - Git branch: `main`
-- Build command: leave blank
 - Deploy command: `npx wrangler deploy`
-- Assets directory: `./public` via `wrangler.jsonc`
+- `wrangler.jsonc` runs `npm run build` before deploying and uploads `./dist`
 
-No framework or paid CMS is required. All deployed links are static paths. Third-party project sites linked externally may need their own availability checks. Content explicitly distinguishes project concepts from published academic work and credits Caira Foundation's founder, Kazi Sabiha.
+Keystatic only runs under `npm run dev`; the production build contains no React or server code.
 
 ## Editorial safety
 

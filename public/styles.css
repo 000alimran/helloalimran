@@ -114,3 +114,4 @@ body::after{content:"";position:fixed;inset:0;z-index:200;pointer-events:none;op
 .paper-caption em{display:block;margin-top:5px;font-style:normal;font-weight:400;letter-spacing:.03em;text-transform:none;color:#505050}
 @media(min-width:761px){.ventures--three{grid-template-columns:repeat(3,minmax(0,1fr))}.ventures--three .venture{min-height:330px}.ventures--three .venture h3{font-size:clamp(24px,2.4vw,34px)}}
 .project-note+.ventures{margin-top:8px}
+.article-body blockquote p{font-size:inherit;line-height:inherit;color:inherit;margin:0}

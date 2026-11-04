@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactBlock from '../../components/ContactBlock.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projectsFor } from '../../lib/projects';
+
+const ventures = await projectsFor('venture', 'work');
+const orbit = await projectsFor('orbit', 'work');
+---
+<Base title="Work & Initiatives" description="Selected work, ventures, collaborations and exploratory projects connected to Al Imran." flip paper>
+<section class="page-hero tone-peach"><div class="wrap"><p class="eyebrow">WORK &amp; INITIATIVES</p><h1>A portfolio of<br>practice and possibility.</h1><p class="subhead">The projects here have different roles, histories, and levels of maturity. They are not all companies I founded. I show the relationship plainly.</p></div></section>
+<section class="section"><div class="wrap"><div class="kicker-line"><div><p class="eyebrow">01 / PRIMARY WORK</p><h2 class="section-title">Selected ventures and work.</h2></div></div><div class="ventures">
+{ventures.map((p, i) => <ProjectCard project={p} number={i + 1} page="work" />)}
+</div></div></section>
+<section class="section"><div class="wrap section-grid"><div class="sec-label"><span class="sec-number">02 /</span>IN MY ORBIT</div><div><h2 class="section-title">Other projects and associations.</h2><p class="section-intro">These deserve visibility, but not equal billing. Where a project's ownership or my exact role is still being documented, I avoid making an inflated claim.</p>
+<div class="filter-bar" role="group" aria-label="Filter associated projects"><button class="filter" type="button" aria-pressed="true" data-filter-button="all">All projects</button><button class="filter" type="button" aria-pressed="false" data-filter-button="public-interest">Public interest</button><button class="filter" type="button" aria-pressed="false" data-filter-button="exploration">Explorations</button></div>
+<div class="ventures">
+{orbit.map((p, i) => <ProjectCard project={p} number={ventures.length + i + 1} page="work" />)}
+</div><div class="notice">A domain name alone does not establish an operating business, active product, or individual founder credit. Individual case studies are added only when scope and contributions can be shown accurately.</div></div></div></section>
+<ContactBlock />
+</Base>

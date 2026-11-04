@@ -47,6 +47,10 @@
     addEventListener('resize', update);
     update();
   }
+  // Links to other sites inside Markdown content open in a new tab.
+  document.querySelectorAll('.article-body a[href^="http"], .long-copy a[href^="http"]').forEach(function(a) {
+    if (a.host !== location.host) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+  });
   const year = document.querySelector('[data-year]');
   if (year) year.textContent = String(new Date().getFullYear());
 })();

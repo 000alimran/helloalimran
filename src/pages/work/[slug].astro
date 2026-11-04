@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactBlock from '../../components/ContactBlock.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const ventures = await getCollection('projects', ({ data }) => data.group === 'venture');
+  return ventures.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+---
+<Base title={data.title} description={data.description ?? data.summary}>
+<div class="wrap breadcrumbs"><a href="/work/">← All work & initiatives</a></div>
+<section class={`page-hero tone-${data.tone ?? 'peach'}`}><div class="wrap"><p class="eyebrow">{data.eyebrow}</p><h1>{data.title}</h1><p class="subhead">{data.subhead}</p></div></section>
+<section class="section"><div class="wrap two-panel"><div class="long-copy"><Content /><div class="utility-actions">{data.website && <a class="btn" href={data.website} target="_blank" rel="noopener noreferrer">{data.domain} <span aria-hidden="true">↗</span></a>}<a class="btn btn-outline" href="/work/">Explore more work ↗</a></div></div><aside class="fact-panel"><p class="tiny-label">PROJECT NOTES</p><dl><div class="fact-item"><dt>Field</dt><dd>{data.eyebrow}</dd></div><div class="fact-item"><dt>Role</dt><dd>{data.roleNote}</dd></div><div class="fact-item"><dt>Case study status</dt><dd>{data.status}</dd></div>{data.website && <div class="fact-item"><dt>Project website</dt><dd><a class="underline-link" href={data.website} target="_blank" rel="noopener noreferrer">{data.domain} ↗</a></dd></div>}</dl></aside></div></section>
+<ContactBlock />
+</Base>

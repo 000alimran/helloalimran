@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactBlock from '../../components/ContactBlock.astro';
+import { getCollection } from 'astro:content';
+
+const essays = (await getCollection('writing')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<Base title="Writing" description="Essays, field notes and reflections by Al Imran on useful design, technology and entrepreneurship.">
+<section class="page-hero tone-butter"><div class="wrap"><p class="eyebrow">ESSAYS / FIELD NOTES</p><h1>Writing as a way<br>of thinking.</h1><p class="subhead">Thoughts about design, technology, the work of building things, and the questions that remain when a project is finished.</p></div></section>
+<section class="section"><div class="wrap"><p class="eyebrow">01 / ON THE PAGE</p><div class="simple-list essay-list">{essays.map((e) => <a href={`/writing/${e.id}/`}><div class="row-label">{e.data.listLabel}</div><div><strong>{e.data.title}</strong><p>{e.data.indexSummary}</p></div><span class="row-arrow" aria-hidden="true">↗</span></a>)}</div><div class="notice">These are personal essays and field notes, not peer-reviewed research. Academic work is clearly separated in the <a href="/research/" class="underline-link">Research section</a>.</div><p class="section-intro">Some thoughts may also appear on <a href="https://substack.com/@000alimran" target="_blank" rel="noopener noreferrer" class="underline-link">Substack ↗</a>.</p></div></section>
+<ContactBlock />
+</Base>
