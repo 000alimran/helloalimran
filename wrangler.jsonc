@@ -5,6 +5,8 @@
   "build": {
     "command": "npm run build"
   },
+  // Needed for `wrangler preview`, which Cloudflare runs for non-main branch builds.
+  "previews": {},
   "assets": {
     "directory": "./dist",
     "html_handling": "auto-trailing-slash",
