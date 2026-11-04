@@ -16,8 +16,12 @@ const tone = fields.select({
 const body = fields.markdoc({ label: 'Body', extension: 'md' });
 const optionalNumber = (label: string, description?: string) => fields.integer({ label, description });
 
+// The live site edits through GitHub (login with GitHub, saves become commits on main).
+// `npm run dev` edits local files, unless PUBLIC_KEYSTATIC_GITHUB=1 is set (used once to create the GitHub App).
+const useGitHub = !import.meta.env.DEV || import.meta.env.PUBLIC_KEYSTATIC_GITHUB === '1';
+
 export default config({
-  storage: { kind: 'local' },
+  storage: useGitHub ? { kind: 'github', repo: '000alimran/helloalimran' } : { kind: 'local' },
   ui: { brand: { name: 'helloalimran.com' } },
   collections: {
     projects: collection({

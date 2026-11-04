@@ -3,3 +3,8 @@ dist/
 .astro/
 .wrangler/
 .DS_Store
+.env
+.env.*
+!.env.production
+.dev.vars
+.claude/

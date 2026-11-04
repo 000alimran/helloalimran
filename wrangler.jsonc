@@ -1,14 +1,11 @@
 {
+  // Build first (`npm run build`), then `wrangler deploy`. The Astro Cloudflare adapter writes the
+  // final Worker config to dist/server/wrangler.json and points wrangler at it.
   "name": "helloalimran",
   "compatibility_date": "2026-10-27",
-  // `wrangler deploy` runs the Astro build first, then uploads ./dist.
-  "build": {
-    "command": "npm run build"
-  },
   // Needed for `wrangler preview`, which Cloudflare runs for non-main branch builds.
   "previews": {},
   "assets": {
-    "directory": "./dist",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
   }
