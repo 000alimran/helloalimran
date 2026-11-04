@@ -164,6 +164,49 @@ void main() {
     return { canvas, state, draw, resize };
   }
 
+  // Synthesised paper sound: sparse crinkles that peak mid-unfold, then a soft flap as the
+  // sheet lands flat. Generated with Web Audio, so there is no audio file to load.
+  let audio = null;
+  function noiseBurst(ctx, seconds, fill) {
+    const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * seconds), ctx.sampleRate);
+    fill(buf.getChannelData(0), ctx.sampleRate);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    return src;
+  }
+  function playUnfold(duration) {
+    try {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      if (audio.state === 'suspended') audio.resume();
+    } catch (e) { return; }
+    const ctx = audio, now = ctx.currentTime;
+    const crinkle = noiseBurst(ctx, duration, function (d, sr) {
+      const len = d.length;
+      let i = 0;
+      while (i < len) {
+        const density = Math.pow(Math.sin(Math.PI * i / len), 0.7);
+        i += Math.floor(sr * (0.004 + Math.random() * 0.03 / (density + 0.15)));
+        const amp = (0.3 + Math.random() * 0.7) * density;
+        const n = Math.floor(sr * (0.002 + Math.random() * 0.012));
+        for (let k = 0; k < n && i + k < len; k++) d[i + k] += (Math.random() * 2 - 1) * amp * Math.exp(-k / (n * 0.3));
+      }
+      for (let k = 0; k < len; k++) d[k] += (Math.random() * 2 - 1) * 0.05 * Math.sin(Math.PI * k / len);
+    });
+    const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 900;
+    const tone = ctx.createBiquadFilter(); tone.type = 'peaking'; tone.frequency.value = 3500; tone.gain.value = 5;
+    const gain = ctx.createGain(); gain.gain.value = 0.28;
+    crinkle.connect(hp).connect(tone).connect(gain).connect(ctx.destination);
+    crinkle.start(now);
+
+    const flap = noiseBurst(ctx, 0.18, function (d, sr) {
+      for (let k = 0; k < d.length; k++) d[k] = (Math.random() * 2 - 1) * Math.exp(-k / (sr * 0.04));
+    });
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 700;
+    const flapGain = ctx.createGain(); flapGain.gain.value = 0.5;
+    flap.connect(lp).connect(flapGain).connect(ctx.destination);
+    flap.start(now + duration * 0.85);
+  }
+
   const touch = matchMedia('(hover: none)').matches;
 
   grids.forEach(function (grid) {
@@ -195,6 +238,7 @@ void main() {
         if (paper.state.open) return;
         paper.state.open = true;
         card.classList.add('is-open');
+        playUnfold(1.4);
         gsap.to(paper.state, { progress: 1, lift: 0, duration: 1.4, ease: 'power2.inOut', overwrite: true, onUpdate: paper.draw });
         gsap.to(caption, { autoAlpha: 0, duration: 0.3 });
         gsap.to(content, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.07, delay: 0.95, ease: 'power3.out' });

@@ -112,3 +112,5 @@ body::after{content:"";position:fixed;inset:0;z-index:200;pointer-events:none;op
 .ventures.is-paper .venture>:not(.paper-canvas,.paper-caption){position:relative;z-index:1}
 .paper-caption{position:absolute;left:0;right:0;bottom:24px;z-index:1;text-align:center;pointer-events:none;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#3f3f3f}
 .paper-caption em{display:block;margin-top:5px;font-style:normal;font-weight:400;letter-spacing:.03em;text-transform:none;color:#505050}
+@media(min-width:761px){.ventures--three{grid-template-columns:repeat(3,minmax(0,1fr))}.ventures--three .venture{min-height:330px}.ventures--three .venture h3{font-size:clamp(24px,2.4vw,34px)}}
+.project-note+.ventures{margin-top:8px}
