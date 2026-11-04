@@ -28,8 +28,11 @@
   buttons.forEach(function(btn) {
     btn.addEventListener('click', function() {
       const filter = btn.dataset.filterButton;
+      const animate = window.Flip && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const state = animate ? Flip.getState(cards) : null;
       buttons.forEach(function(b) { b.setAttribute('aria-pressed', String(b === btn)); });
       cards.forEach(function(card) { card.hidden = filter !== 'all' && card.dataset.type !== filter; });
+      if (state) Flip.from(state, {duration: 0.5, ease: 'power2.inOut', onEnter: function(els) { return gsap.fromTo(els, {autoAlpha: 0, y: 16}, {autoAlpha: 1, y: 0, duration: 0.4, clearProps: 'transform'}); }});
     });
   });
   const bar = document.querySelector('.progress');
